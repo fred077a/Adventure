@@ -3,10 +3,12 @@ import java.util.ArrayList;
 public class Room {
     private int roomNumber;
     private int[] access;
+    private ArrayList<String> items;
 
     public Room(int roomNumber) {
         this.roomNumber = roomNumber;
-        this.access = getAccess(this.roomNumber);
+        this.access = getAccessValues(roomNumber);
+        this.items = getItemsValues(roomNumber);
     }
 
     public String toString() {
@@ -34,7 +36,7 @@ public class Room {
 
     public void setRoomNumber(int newRoomNumber) {
         this.roomNumber = newRoomNumber;
-        this.access = getAccess(newRoomNumber);
+        this.access = getAccessValues(newRoomNumber);
     }
 
     public String getDirection(int roomNumber, int toRoom) {
@@ -49,7 +51,52 @@ public class Room {
         }
     }
 
-    public int[] getAccess(int roomNumber) {
+    public ArrayList<String> getItemsValues(int roomNumber) {
+        ArrayList<String> items = new ArrayList<String>(){};
+        switch (roomNumber) {
+            case 1 -> {
+                items.add("A knife");
+                return items;
+            }
+            case 2 -> {
+                items.add("A knife");
+                return items;
+            }
+            case 3 -> {
+                items.add("A knife");
+                return items;
+            }
+            case 4 -> {
+                items.add("A knife");
+                return items;
+            }
+            case 5 -> {
+                items.add("A knife");
+                return items;
+            }
+            case 6 -> {
+                items.add("A knife");
+                return items;
+            }
+            case 7 -> {
+                items.add("A knife");
+                return items;
+            }
+            case 8 -> {
+                items.add("A knife");
+                return items;
+            }
+            case 9 -> {
+                items.add("A knife");
+                return items;
+            }
+            default -> {
+                return items;
+            }
+        }
+    }
+
+    public int[] getAccessValues(int roomNumber) {
         switch (roomNumber) {
             case 1 -> {
                 return new int[]{2, 4};
