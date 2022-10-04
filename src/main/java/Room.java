@@ -1,7 +1,8 @@
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class Room {
-    private int roomNumber;
+    private final int roomNumber;
     private int[] access;
     private ArrayList<String> items;
 
@@ -12,6 +13,7 @@ public class Room {
     }
 
     public String toString() {
+        String itemList = getItemList();
         StringBuilder access = new StringBuilder();
         for (int i = 0; i < this.access.length; i++) {
             String direction = "\u001B[34m" + getDirection(this.roomNumber, this.access[i]) + "\u001B[0m";
@@ -23,7 +25,20 @@ public class Room {
                 access.append(direction).append(", ");
             }
         }
-        return "You are in room " + this.roomNumber + ", and you can now go " + access;
+        return "You are in room " + this.roomNumber + ", and you can now go " + access + "\n" + itemList;
+    }
+
+    public String getItemList() {
+        String title = "Items in this room:";
+        String itemList = "";
+        for (String item: items) {
+            itemList = itemList + "\n" + "\u001B[32m" + item + "\u001B[0m";
+        }
+        if (itemList.equals("")) {
+            return "There are no items in this room";
+        } else {
+            return title + itemList;
+        }
     }
 
     public int getRoomNumber() {
@@ -32,11 +47,6 @@ public class Room {
 
     public int[] getAccess() {
         return this.access;
-    }
-
-    public void setRoomNumber(int newRoomNumber) {
-        this.roomNumber = newRoomNumber;
-        this.access = getAccessValues(newRoomNumber);
     }
 
     public String getDirection(int roomNumber, int toRoom) {
@@ -55,45 +65,57 @@ public class Room {
         ArrayList<String> items = new ArrayList<String>(){};
         switch (roomNumber) {
             case 1 -> {
-                items.add("A knife");
+                items.add("rope");
                 return items;
             }
             case 2 -> {
-                items.add("A knife");
+                items.add("dust");
+                items.add("lighter");
                 return items;
             }
-            case 3 -> {
-                items.add("A knife");
+            /*case 3 -> {
                 return items;
-            }
+            }*/
             case 4 -> {
-                items.add("A knife");
+                items.add("stones");
                 return items;
             }
             case 5 -> {
-                items.add("A knife");
+                items.add("gold");
                 return items;
             }
             case 6 -> {
-                items.add("A knife");
+                items.add("sword");
                 return items;
             }
-            case 7 -> {
-                items.add("A knife");
+            /*case 7 -> {
                 return items;
-            }
+            }*/
             case 8 -> {
-                items.add("A knife");
+                items.add("keys");
                 return items;
             }
             case 9 -> {
-                items.add("A knife");
+                items.add("knife");
                 return items;
             }
             default -> {
                 return items;
             }
         }
+    }
+
+    public boolean removeItem(String item) {
+        int position = this.items.indexOf(item);
+        if (position != -1) {
+            this.items.remove(item);
+            return true;
+        } else {
+            return false;
+        }
+    }
+    public void addItem(String item) {
+        this.items.add(item);
     }
 
     public int[] getAccessValues(int roomNumber) {
