@@ -8,6 +8,9 @@ public class UserInterface {
     public void startGame() {
         //Introduction
         System.out.println("Welcome to the room game!");
+        System.out.println("You can use the following commands:");
+        System.out.println("north - east - south - west");
+        System.out.println("take - drop - inventory - eat - health\n");
 
         //Start of the game
         do {
@@ -21,8 +24,9 @@ public class UserInterface {
     }
 
     public void makeMove() {
-        int currentRoomNumber = adventure.getPlayerRoom().getRoomNumber();
-        int[] accessTo = adventure.getPlayerRoom().getAccess();
+        Room currentRoom = adventure.getPlayerRoom();
+        int currentRoomNumber = currentRoom.getRoomNumber();
+        int[] accessTo = currentRoom.getAccess();
         int newRoom;
         boolean loop = true;
         do {
@@ -58,7 +62,7 @@ public class UserInterface {
                         loop = false;
                         break;
                     } else if (i == accessTo.length-1) {
-                        System.out.println("Sorry, that is not possible!");
+                        System.out.println("Sorry, that is not possible! - Try again!");
                         break;
                     }
                 }

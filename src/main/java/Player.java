@@ -1,9 +1,8 @@
 import java.util.ArrayList;
-import java.util.Objects;
 
 public class Player {
-     int currentRoomNumber;
-     ArrayList<String> inventory;
+     private int currentRoomNumber;
+     private ArrayList<String> inventory;
 
      public Player(int roomNumber) {
          this.currentRoomNumber = 1;
