@@ -1,3 +1,4 @@
+import java.util.Objects;
 
 public class Adventure {
     private Player player = new Player(1);
@@ -7,31 +8,32 @@ public class Adventure {
         return player;
     }
 
-    public Room getPlayerRoom() {
+    public Room getCurrentRoom() {
         return map.getRoom(player.getRoomNumber());
     }
 
     public void moveToNewRoom(int newRoomNumber) {
+        this.player.setHealth(this.player.getHealth() - 1);
         this.player.setRoomNumber(newRoomNumber);
     }
 
-    public String dropItem(String item) {
+    public String dropItem(String itemName) {
         int currentRoomNumber = player.getRoomNumber();
-        boolean removed = player.removeItem(item);
-        if (removed) {
-            map.getRoom(currentRoomNumber).addItem(item);
-            return "You have dropped '" + item + "'";
+        Object removedItem = player.removeItem(itemName);
+        if (removedItem != null) {
+            map.getRoom(currentRoomNumber).addItem(removedItem);
+            return "You have dropped '" + itemName + "'";
         } else return "There is no such item in your inventory";
     }
 
-    public String takeItem(String item) {
+    public String takeItem(String itemName) {
         int currentRoomNumber = player.getRoomNumber();
-        boolean removed = map.getRoom(currentRoomNumber).removeItem(item);
-        if (removed) {
-            player.addItem(item);
-            return "You have taken '" + item + "'";
+        Object newItem = map.getRoom(currentRoomNumber).removeItem(itemName);
+        if (newItem != null) {
+            player.addItem(newItem);
+            return "You have taken '" + itemName + "'";
         } else {
-            return "The room does not contain '" + item + "'";
+            return "The room does not contain '" + itemName + "'";
         }
     }
 }

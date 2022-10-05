@@ -4,12 +4,16 @@ import java.util.Objects;
 public class Room {
     private final int roomNumber;
     private int[] access;
-    private ArrayList<String> items;
+    private ArrayList<Item> items;
+    private ArrayList<Food> foods;
+    private ArrayList<Weapon> weapons;
 
-    public Room(int roomNumber) {
+    public Room(int roomNumber, ArrayList items, int[] access, ArrayList foods, ArrayList weapons) {
         this.roomNumber = roomNumber;
-        this.access = getAccessValues(roomNumber);
-        this.items = getItemsValues(roomNumber);
+        this.access = access;
+        this.items = items;
+        this.foods = foods;
+        this.weapons = weapons;
     }
 
     public String toString() {
@@ -29,10 +33,16 @@ public class Room {
     }
 
     public String getItemList() {
-        String title = "Items in this room:";
+        String title = "\u001B[32m" + "There are items in this room:";
         String itemList = "";
-        for (String item: items) {
+        for (Item item: items) {
             itemList = itemList + "\n" + "\u001B[32m" + item + "\u001B[0m";
+        }
+        for (Food food: foods) {
+            itemList = itemList + "\n" + "\u001B[32m" + food + "\u001B[0m";
+        }
+        for (Weapon weapon: weapons) {
+            itemList = itemList + "\n" + "\u001B[32m" + weapon + "\u001B[0m";
         }
         if (itemList.equals("")) {
             return "There are no items in this room";
@@ -61,95 +71,36 @@ public class Room {
         }
     }
 
-    public ArrayList<String> getItemsValues(int roomNumber) {
-        ArrayList<String> items = new ArrayList<String>(){};
-        switch (roomNumber) {
-            case 1 -> {
-                items.add("rope");
-                return items;
-            }
-            case 2 -> {
-                items.add("dust");
-                items.add("lighter");
-                return items;
-            }
-            /*case 3 -> {
-                return items;
-            }*/
-            case 4 -> {
-                items.add("stones");
-                return items;
-            }
-            case 5 -> {
-                items.add("gold");
-                return items;
-            }
-            case 6 -> {
-                items.add("sword");
-                return items;
-            }
-            /*case 7 -> {
-                return items;
-            }*/
-            case 8 -> {
-                items.add("keys");
-                return items;
-            }
-            case 9 -> {
-                items.add("knife");
-                return items;
-            }
-            default -> {
-                return items;
-            }
-        }
+    public Object findItem(String itemName) {
+        Object itemFound = null;
+        for (Item item: items) if (item.getName().toLowerCase().equals(itemName)) itemFound = item;
+        for (Food food: foods) if (food.getName().toLowerCase().equals(itemName)) itemFound = food;
+        for (Weapon weapon: weapons) if (weapon.getName().toLowerCase().equals(itemName)) itemFound = weapon;
+        return itemFound;
     }
 
-    public boolean removeItem(String item) {
-        int position = this.items.indexOf(item);
-        if (position != -1) {
-            this.items.remove(item);
-            return true;
+    public Object removeItem(String itemName) {
+        try {
+            Object item = findItem(itemName);
+            if (item.getClass().toString().equals("class Food")) {
+                this.foods.remove(item);
+            } else if (item.getClass().toString().equals("class Weapon")) {
+                this.weapons.remove(item);
+            } else {
+                this.items.remove(item);
+            }
+            return item;
+        } catch (Exception ex) {
+            return null;
+        }
+    }
+    public void addItem(Object item) {
+        if (item.getClass().toString().equals("class Food")) {
+            this.foods.add((Food) item);
+        } else if (item.getClass().toString().equals("class Weapon")) {
+            this.weapons.add((Weapon) item);
         } else {
-            return false;
-        }
-    }
-    public void addItem(String item) {
-        this.items.add(item);
-    }
-
-    public int[] getAccessValues(int roomNumber) {
-        switch (roomNumber) {
-            case 1 -> {
-                return new int[]{2, 4};
-            }
-            case 2 -> {
-                return new int[]{1, 3};
-            }
-            case 3 -> {
-                return new int[]{2, 6};
-            }
-            case 4 -> {
-                return new int[]{1, 7};
-            }
-            case 5 -> {
-                return new int[]{2, 4, 6, 8};
-            }
-            case 6 -> {
-                return new int[]{3, 9};
-            }
-            case 7 -> {
-                return new int[]{4, 8};
-            }
-            case 8 -> {
-                return new int[]{7, 5, 9};
-            }
-            case 9 -> {
-                return new int[]{8, 6};
-            }
-            default -> {
-                return new int[]{this.roomNumber};
-            }
+            this.items.add((Item) item);
         }
     }
 }
