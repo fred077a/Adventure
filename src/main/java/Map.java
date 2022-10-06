@@ -1,3 +1,5 @@
+import org.w3c.dom.ranges.Range;
+
 import java.util.ArrayList;
 
 public class Map {
@@ -6,14 +8,7 @@ public class Map {
     public Map() {
         for (int i = 0; i < 9; i++) {
             int roomNumber = i+1;
-            this.rooms.add(
-                    new Room(
-                            roomNumber,
-                            setItems(roomNumber),
-                            getAccessValues(roomNumber),
-                            setFoods(roomNumber),
-                            setWeapons(roomNumber))
-            );
+            this.rooms.add(new Room(roomNumber, setItems(roomNumber), getAccessValues(roomNumber)));
         }
     }
 
@@ -59,56 +54,35 @@ public class Map {
     public ArrayList setItems(int roomNumber) {
         ArrayList items = new ArrayList(){};
         switch (roomNumber) {
-            case 4 -> {
-                items.add(new Item("Lighter"));
-                return items;
-            }
-            default -> {
-                return items;
-            }
-        }
-    }
-    public ArrayList setFoods(int roomNumber) {
-        ArrayList items = new ArrayList(){};
-        switch (roomNumber) {
             case 1 -> {
                 items.add(new Food("Apple", 4));
                 return items;
             }
             case 2 -> {
+                items.add(new MeleeWeapon("Knife", 3));
                 items.add(new Food("Chocolate", 2));
+                return items;
+            }
+            case 4 -> {
+                items.add(new Item("Lighter"));
+                items.add(new RangedWeapon("Stone", 1, 1));
                 return items;
             }
             case 5 -> {
                 items.add(new Food("Bread", 5));
                 return items;
             }
+            case 6 -> {
+                items.add(new MeleeWeapon("Sword", 7));
+                return items;
+            }
             case 8 -> {
                 items.add(new Food("Crumbs", 1));
                 return items;
             }
-            default -> {
-                return items;
-            }
-        }
-    }
-    public ArrayList setWeapons(int roomNumber) {
-        ArrayList items = new ArrayList(){};
-        switch (roomNumber) {
-            case 2 -> {
-                items.add(new Weapon("Knife", 3));
-                return items;
-            }
-            case 4 -> {
-                items.add(new Weapon("Stone", 1));
-                return items;
-            }
-            case 6 -> {
-                items.add(new Weapon("Sword", 7));
-                return items;
-            }
             case 9 -> {
-                items.add(new Weapon("Gun", 9));
+                items.add(new RangedWeapon("Gun", 5, 8) {
+                });
                 return items;
             }
             default -> {

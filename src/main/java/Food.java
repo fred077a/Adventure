@@ -5,7 +5,4 @@ public class Food extends Item{
         super(name);
         this.healthPoints = healthPoints;
     }
-    public String toString() {
-        return super.getName();
-    }
 }
