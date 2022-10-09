@@ -21,8 +21,8 @@ public class UserInterface {
             getInput();
 
             //check if out of health
-            if (player.getHealth() == 0) {
-                System.out.println("GAME OVER - You starved to death!");
+            if (player.getHealth() <= 0) {
+                System.out.println("GAME OVER - You died!");
                 break;
             }
 
@@ -63,9 +63,11 @@ public class UserInterface {
                 }
                 case "attack" -> {
                     System.out.println(adventure.attack(input));
+                    loop = false;
                 }
                 case "equip" -> {
                     System.out.println(adventure.equip(input));
+                    loop = false;
                 }
                 case "north", "west", "east", "south" -> {
                     System.out.println(adventure.moveToNewRoom(input));

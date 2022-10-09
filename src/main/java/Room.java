@@ -1,19 +1,21 @@
 import java.util.ArrayList;
-import java.util.Objects;
 
 public class Room {
     private final int roomNumber;
     private int[] access;
     private ArrayList<Item> items;
+    private ArrayList<Enemy> enemies;
 
-    public Room(int roomNumber, ArrayList<Item> items, int[] access) {
+    public Room(int roomNumber, ArrayList<Item> items, int[] access, ArrayList<Enemy> enemies) {
         this.roomNumber = roomNumber;
         this.access = access;
         this.items = items;
+        this.enemies = enemies;
     }
 
     public String toString() {
         String itemList = getItemList();
+        String enemyList = getEnemyList();
         StringBuilder access = new StringBuilder();
         for (int i = 0; i < this.access.length; i++) {
             String direction = "\u001B[34m" + getDirection(this.roomNumber, this.access[i]) + "\u001B[0m";
@@ -25,7 +27,7 @@ public class Room {
                 access.append(direction).append(", ");
             }
         }
-        return "You are in room " + this.roomNumber + ", and you can now go " + access + "\n" + itemList;
+        return "You are in room " + this.roomNumber + ", and you can now go " + access + "\n" + itemList + enemyList;
     }
 
     public String getItemList() {
@@ -38,6 +40,19 @@ public class Room {
             return "There are no items in this room";
         } else {
             return title + itemList;
+        }
+    }
+
+    public String getEnemyList() {
+        String title = "\u001B[31m" + "\nThere are enemies in this room:";
+        String enemyList = "";
+        for (Enemy enemy: enemies) {
+            enemyList = enemyList + "\n" + "\u001B[31m" + enemy + "\u001B[0m";
+        }
+        if (enemyList.equals("")) {
+            return "\nThere are no enemies in this room";
+        } else {
+            return title + enemyList;
         }
     }
 
@@ -69,6 +84,31 @@ public class Room {
             }
         }
         return itemFound;
+    }
+    public Enemy findEnemy(String enemyName) {
+        Enemy enemyFound = null;
+        for (int i = 0; i < enemies.size(); i++) {
+            if (enemies.get(i).getName().toLowerCase().equals(enemyName)) {
+                enemyFound = enemies.get(i);
+            }
+        }
+        return enemyFound;
+    }
+    public void removeEnemy(Enemy enemy) {
+        items.add(enemy.getWeapon());
+        this.enemies.remove(enemy);
+    }
+
+    public Enemy getRandomEnemy() {
+        return enemies.get(0);
+    }
+
+    public int getTotalEnemyDamage() {
+        int totalDamage = 0;
+        for (Enemy enemy: enemies) {
+            totalDamage += enemy.getWeapon().getDamage();
+        }
+        return totalDamage;
     }
 
     public Object removeItem(String itemName) {

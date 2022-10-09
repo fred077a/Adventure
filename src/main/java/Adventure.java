@@ -26,7 +26,8 @@ public class Adventure {
         String result = "";
         for (int i = 0; i < accessTo.length; i++) {
             if (newRoom == accessTo[i]) {
-                this.player.setHealth(this.player.getHealth() - 1);
+                this.player.setHealth(this.player.getHealth() - currentRoom.getTotalEnemyDamage());
+                showHealth();
                 this.player.setRoomNumber(newRoom);
                 result = "You are going to room " + newRoom;
                 break;
@@ -48,17 +49,53 @@ public class Adventure {
     }
 
     public String attack(String input) {
-        try {
-            if (player.isWeaponEquipped()) {
+        int inputs = input.split(" ").length;
+        if (player.isWeaponEquipped()) {
+            try {
                 Weapon weapon = player.getWeaponEquipped();
-                weapon.useWeapon();
+                if (weapon.canUse()) {
+                    weapon.useWeapon();
 
-                return "placeholder";
-            } else {
-                return "You do not have a weapon equipped";
+                    //player info
+                    int playerHealth = player.getHealth();
+                    int playerDamage = weapon.getDamage();
+
+                    //room & enemy info
+                    Room room = map.getRoom(player.getRoomNumber());
+                    String enemyName;
+                    Enemy enemy;
+                    if (inputs != 1) {
+                        enemyName = input.split(" ")[1];
+                        enemy = room.findEnemy(input.split(" ")[1]);
+                    } else {
+                        enemy = room.getRandomEnemy();
+                        enemyName = enemy.getName();
+                    }
+                    Weapon enemyWeapon = enemy.getWeapon();
+                    int enemyWeaponDamage = enemyWeapon.getDamage();
+
+                    //attack
+                    int enemyHealthAfter = enemy.attacked(playerDamage);
+                    if (enemyHealthAfter <= 0) {
+                        room.removeEnemy(enemy);
+                        return "You defeated " + enemyName + " and you now have " + player.getHealth() + " HP";
+                    } else {
+                        if (!weapon.getClass().toString().equals("class RangedWeapon")) {
+                            player.setHealth(playerHealth - enemyWeaponDamage);
+                        }
+                        return "You attacked " + enemyName + "(" + enemyHealthAfter + " HP), and you now have " + player.getHealth() + " HP";
+                    }
+                } else {
+                    dropItem(weapon.getName());
+                    player.setWeaponEquipped(null);
+                    return "Your weapon does not work anymore, and it has been dropped!";
+                }
+            } catch (Exception ex) {
+                System.out.println(ex);
+                return "No such enemy";
             }
-        } catch (Exception ex) {
-            return "Please enter an enemy after '" + "attack'";
+        } else {
+            return "You need to equip a weapon";
         }
     }
 
@@ -69,11 +106,8 @@ public class Adventure {
             player.setWeaponEquipped(weapon);
             return "You have equipped " + weapon;
         } catch (Exception ex) {
-            if (input.split(" ").length == 1) {
-                return "Please enter something after 'equip'";
-            } else {
-                return "No such weapon in inventory";
-            }
+            System.out.println(input);
+            return "No such weapon in inventory";
         }
     }
 

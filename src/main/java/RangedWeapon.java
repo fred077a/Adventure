@@ -10,7 +10,6 @@ public class RangedWeapon extends Weapon{
     }
     public boolean canUse() {
         if (remainingUses > 0) {
-            setRemainingUses(this.remainingUses-1);
             return true;
         } else {
             return false;
