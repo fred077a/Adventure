@@ -80,7 +80,8 @@ public class Adventure {
                         room.removeEnemy(enemy);
                         return "You defeated " + enemyName + " and you now have " + player.getHealth() + " HP";
                     } else {
-                        if (!weapon.getClass().toString().equals("class RangedWeapon")) {
+                        //ranged weapon will do so player no damage takes.
+                        if (!(weapon instanceof RangedWeapon)) {
                             player.setHealth(playerHealth - enemyWeaponDamage);
                         }
                         return "You attacked " + enemyName + "(" + enemyHealthAfter + " HP), and you now have " + player.getHealth() + " HP";
@@ -91,8 +92,10 @@ public class Adventure {
                     return "Your weapon does not work anymore, and it has been dropped!";
                 }
             } catch (Exception ex) {
-                System.out.println(ex);
-                return "No such enemy";
+                //todo: use weapon
+                Weapon weapon = player.getWeaponEquipped();
+                weapon.useWeapon();
+                return "No enemy hit";
             }
         } else {
             return "You need to equip a weapon";
@@ -106,22 +109,21 @@ public class Adventure {
             player.setWeaponEquipped(weapon);
             return "You have equipped " + weapon;
         } catch (Exception ex) {
-            System.out.println(input);
             return "No such weapon in inventory";
         }
     }
 
-    public String dropItem(String itemName) {
+    public ItemResults dropItem(String itemName) {
         try {
             itemName = itemName.split(" ")[1];
             int currentRoomNumber = player.getRoomNumber();
             Object removedItem = player.removeItem(itemName);
             if (removedItem != null) {
                 map.getRoom(currentRoomNumber).addItem(removedItem);
-                return "\u001B[32m" + "You have dropped '" + itemName + "'" + "\u001B[0m";
-            } else return "\u001B[32m" + "There is no such item in your inventory" + "\u001B[0m";
+                return ItemResults.ITEM_DROPPED;
+            } else return ItemResults.DOES_NOT_EXIST_IN_INVENTORY;
         } catch (Exception ex) {
-            return "Please enter an item after '" + "drop'";
+            return ItemResults.INVALID_COMMAND_DROP;
         }
     }
 
@@ -143,19 +145,19 @@ public class Adventure {
         }
     }
 
-    public String takeItem(String itemName) {
+    public ItemResults takeItem(String itemName) {
         try {
             itemName = itemName.split(" ")[1];
             int currentRoomNumber = player.getRoomNumber();
             Object newItem = map.getRoom(currentRoomNumber).removeItem(itemName);
             if (newItem != null) {
                 player.addItem(newItem);
-                return "\u001B[32m" + "You have taken '" + itemName + "'" + "\u001B[0m";
+                return ItemResults.ITEM_TAKEN;
             } else {
-                return "\u001B[32m" + "The room does not contain '" + itemName + "'" + "\u001B[0m";
+                return ItemResults.DOES_NOT_EXIST_IN_ROOM;
             }
         } catch (Exception ex) {
-            return "Please enter an item after '" + "take'";
+            return ItemResults.INVALID_COMMAND_TAKE;
         }
     }
 }

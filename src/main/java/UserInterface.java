@@ -1,4 +1,3 @@
-import java.util.Objects;
 import java.util.Scanner;
 
 public class UserInterface {
@@ -46,11 +45,25 @@ public class UserInterface {
                     loop = false;
                 }
                 case "take" -> {
-                    System.out.println(adventure.takeItem(input));
+                    ItemResults result = adventure.takeItem(input);
+                    if (result == ItemResults.ITEM_TAKEN) {
+                        System.out.println("\u001B[32m" + "You have taken '" + input.split(" ")[1] + "'" + "\u001B[0m");
+                    } else if (result == ItemResults.DOES_NOT_EXIST_IN_ROOM) {
+                        System.out.println("\u001B[32m" + "The room does not contain '" + input.split(" ")[1] + "'" + "\u001B[0m");
+                    } else if (result == ItemResults.INVALID_COMMAND_TAKE) {
+                        System.out.println("Please enter an item after '" + "take'");
+                    }
                     loop = false;
                 }
                 case "drop" -> {
-                    System.out.println(adventure.dropItem(input));
+                    ItemResults result = adventure.dropItem(input);
+                    if (result == ItemResults.ITEM_DROPPED) {
+                        System.out.println("\u001B[32m" + "You have dropped '" + input.split(" ")[1] + "'" + "\u001B[0m");
+                    } else if (result == ItemResults.DOES_NOT_EXIST_IN_INVENTORY) {
+                        System.out.println("\u001B[32m" + "There is no such item in your inventory" + "\u001B[0m");
+                    } else if (result == ItemResults.INVALID_COMMAND_DROP) {
+                        System.out.println("Please enter an item after '" + "drop'");
+                    }
                     loop = false;
                 }
                 case "health" -> {

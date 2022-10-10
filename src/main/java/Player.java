@@ -77,7 +77,7 @@ public class Player {
          Food f = findFood(foodName);
          if (f != null) {
              setHealth(health + f.getHealthPoints());
-             items.remove((Item) f);
+             items.remove(f);
              return "You ate '" + foodName + "' and you now have " + health + " HP!";
          } else {
              return "You do not have '" + foodName + "' to eat.";

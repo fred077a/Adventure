@@ -85,6 +85,7 @@ public class Room {
         }
         return itemFound;
     }
+
     public Enemy findEnemy(String enemyName) {
         Enemy enemyFound = null;
         for (int i = 0; i < enemies.size(); i++) {
@@ -94,6 +95,7 @@ public class Room {
         }
         return enemyFound;
     }
+
     public void removeEnemy(Enemy enemy) {
         items.add(enemy.getWeapon());
         this.enemies.remove(enemy);
