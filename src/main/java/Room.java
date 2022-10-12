@@ -102,7 +102,11 @@ public class Room {
     }
 
     public Enemy getRandomEnemy() {
-        return enemies.get(0);
+        if (enemies.size() > 0) {
+            return enemies.get(0);
+        } else {
+            return null;
+        }
     }
 
     public int getTotalEnemyDamage() {

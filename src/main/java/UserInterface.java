@@ -6,7 +6,11 @@ public class UserInterface {
 
     public void runUi() {
         //Introduction
-        System.out.println("Welcome to the room game!");
+        System.out.print("Welcome to ");
+        System.out.println("\033[0;1m" + "Find The virus" + "\u001B[0m");
+        System.out.println("You are infected by Covid");
+        System.out.println("You need to find room 5 where the vaccine is");
+
 
         //Player
         Player player = adventure.getPlayer();
@@ -20,7 +24,7 @@ public class UserInterface {
             getInput();
 
             //check if out of health
-            if (player.getHealth() <= 0) {
+            if (player.getHealthPoints() <= 0) {
                 System.out.println("GAME OVER - You died!");
                 break;
             }

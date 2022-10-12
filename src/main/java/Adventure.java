@@ -26,7 +26,7 @@ public class Adventure {
         String result = "";
         for (int i = 0; i < accessTo.length; i++) {
             if (newRoom == accessTo[i]) {
-                this.player.setHealth(this.player.getHealth() - currentRoom.getTotalEnemyDamage());
+                this.player.setHealth(this.player.getHealthPoints() - currentRoom.getTotalEnemyDamage());
                 showHealth();
                 this.player.setRoomNumber(newRoom);
                 result = "You are going to room " + newRoom;
@@ -44,58 +44,48 @@ public class Adventure {
             Player player = getPlayer();
             return player.eat(input.split(" ")[1]);
         } catch (Exception ex) {
-            return "Please enter a weapon after '\" + \"equip'";
+            return "Please enter a food after '\" + \"equip'";
         }
     }
 
     public String attack(String input) {
         int inputs = input.split(" ").length;
         if (player.isWeaponEquipped()) {
-            try {
-                Weapon weapon = player.getWeaponEquipped();
-                if (weapon.canUse()) {
-                    weapon.useWeapon();
-
-                    //player info
-                    int playerHealth = player.getHealth();
-                    int playerDamage = weapon.getDamage();
-
-                    //room & enemy info
-                    Room room = map.getRoom(player.getRoomNumber());
-                    String enemyName;
-                    Enemy enemy;
-                    if (inputs != 1) {
-                        enemyName = input.split(" ")[1];
-                        enemy = room.findEnemy(input.split(" ")[1]);
-                    } else {
-                        enemy = room.getRandomEnemy();
-                        enemyName = enemy.getName();
-                    }
+            Weapon weapon = player.getWeaponEquipped();
+            if (weapon.canUse()) {
+                weapon.useWeapon();
+                //room & enemy info
+                Room room = map.getRoom(player.getRoomNumber());
+                String enemyName;
+                Enemy enemy;
+                if (inputs != 1) enemy = room.findEnemy(input.split(" ")[1]);
+                else enemy = room.getRandomEnemy();
+                if (enemy != null) {
+                    enemyName = enemy.getName();
                     Weapon enemyWeapon = enemy.getWeapon();
                     int enemyWeaponDamage = enemyWeapon.getDamage();
 
                     //attack
+                    //player info
+                    int playerHealth = player.getHealthPoints();
+                    int playerDamage = weapon.getDamage();
                     int enemyHealthAfter = enemy.attacked(playerDamage);
                     if (enemyHealthAfter <= 0) {
                         room.removeEnemy(enemy);
-                        return "You defeated " + enemyName + " and you now have " + player.getHealth() + " HP";
+                        return "You defeated " + enemyName + " and you now have " + player.getHealthPoints() + " HP";
                     } else {
                         //ranged weapon will do so player no damage takes.
-                        if (!(weapon instanceof RangedWeapon)) {
-                            player.setHealth(playerHealth - enemyWeaponDamage);
-                        }
-                        return "You attacked " + enemyName + "(" + enemyHealthAfter + " HP), and you now have " + player.getHealth() + " HP";
+                        player.setHealth(playerHealth - enemyWeaponDamage);
+                        return "You attacked " + enemyName + "(" + enemyHealthAfter + " HP), and you now have " + player.getHealthPoints() + " HP";
                     }
                 } else {
-                    dropItem(weapon.getName());
-                    player.setWeaponEquipped(null);
-                    return "Your weapon does not work anymore, and it has been dropped!";
+                    weapon.useWeapon();
+                    return "No enemy hit";
                 }
-            } catch (Exception ex) {
-                //todo: use weapon
-                Weapon weapon = player.getWeaponEquipped();
-                weapon.useWeapon();
-                return "No enemy hit";
+            } else {
+                dropItem(weapon.getName());
+                player.setWeaponEquipped(null);
+                return "Your weapon does not work anymore, and it has been dropped!";
             }
         } else {
             return "You need to equip a weapon";
@@ -128,7 +118,7 @@ public class Adventure {
     }
 
     public String showHealth() {
-        int healthPoints = player.getHealth();
+        int healthPoints = player.getHealthPoints();
         final String green = "\u001B[32m";
         final String yellow = "\u001B[33m";
         final String red = "\u001B[31m";

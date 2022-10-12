@@ -86,7 +86,7 @@ public class Map {
                 return items;
             }
             case 9 -> {
-                items.add(new RangedWeapon("Gun", 6, 8) {
+                items.add(new RangedWeapon("Gun", 6, 2) {
                 });
                 return items;
             }
@@ -103,7 +103,7 @@ public class Map {
                 return enemies;
             }
             case 8 -> {
-                enemies.add(new Enemy("Doctor", new MeleeWeapon("Defibrillator", 4), 10));
+                enemies.add(new Enemy("Doctor", new MeleeWeapon("Defibrillator", 5), 13));
                 enemies.add(new Enemy("Nurse", new RangedWeapon("Taser", 2, 2), 4));
                 return enemies;
             }

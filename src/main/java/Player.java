@@ -3,7 +3,7 @@ import java.util.ArrayList;
 public class Player {
      private int currentRoomNumber;
      private ArrayList<Item> items;
-     private int health = 10;
+     private int healthPoints = 10;
      private Weapon weaponEquipped = null;
 
      public Player(int roomNumber) {
@@ -14,9 +14,8 @@ public class Player {
      public int getRoomNumber() {
          return this.currentRoomNumber;
      }
-
-     public int getHealth() {
-         return this.health;
+     public int getHealthPoints() {
+         return this.healthPoints;
      }
 
      public void setWeaponEquipped(Weapon weapon) {
@@ -34,7 +33,7 @@ public class Player {
      }
 
      public void setHealth(int newHealthPoints) {
-         this.health = newHealthPoints;
+         this.healthPoints = newHealthPoints;
      }
 
      public String getInventoryList() {
@@ -76,9 +75,9 @@ public class Player {
      public String eat(String foodName) {
          Food f = findFood(foodName);
          if (f != null) {
-             setHealth(health + f.getHealthPoints());
+             setHealth(healthPoints + f.getHealthPoints());
              items.remove(f);
-             return "You ate '" + foodName + "' and you now have " + health + " HP!";
+             return "You ate '" + foodName + "' and you now have " + healthPoints + " HP!";
          } else {
              return "You do not have '" + foodName + "' to eat.";
          }
